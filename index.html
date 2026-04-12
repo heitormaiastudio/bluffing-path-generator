@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bluffing Path Generator</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0f1220,#1b2040);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+
+.container {
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  width:420px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.3);
+}
+
+button {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  background:#111;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.question {
+  margin-top:20px;
+  font-weight:bold;
+}
+
+.answers {
+  margin-top:10px;
+  text-align:left;
+}
+
+.hidden { display:none; }
+</style>
+</head>
+
+<body>
+
+<div class="container" id="login">
+  <h2>Bluffing Path</h2>
+  <p>Enter access code</p>
+  <input type="password" id="code">
+  <button onclick="checkCode()">Enter</button>
+</div>
+
+<div class="container hidden" id="app">
+  <h2>Question Generator</h2>
+  <button onclick="generateQuestion()">Generate Question</button>
+  <button onclick="generateQuestion()">Generate Again</button>
+
+  <div class="question" id="question"></div>
+  <div class="answers" id="answers"></div>
+</div>
+
+<script>
+
+const accessCode = "BLUFF2026";
+let usedQuestions = [];
+
+function checkCode(){
+  if(document.getElementById("code").value === accessCode){
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+  } else {
+    alert("Invalid code");
+  }
+}
+
+const questions = [
+
+/* WHICH */
+{question:"Which app do I use the most?",answers:[
+"The app I use the most is Instagram, TikTok, or WhatsApp.",
+"The app I use the most is a social media app, a messaging app, or an entertainment app.",
+"The app I use the most is the one I open every day."
+]},
+{question:"Which place do I prefer the most?",answers:[
+"The place I prefer the most is the beach, the mall, or my house.",
+"The place I prefer the most is somewhere relaxing, fun, or close to my friends.",
+"The place I prefer the most is a place where I can relax or have fun."
+]},
+{question:"Which school subject do I find the most boring?",answers:[
+"The school subject I find the most boring is Math, History, or Geography.",
+"The school subject I find the most boring is one that is difficult or not interesting.",
+"The school subject I find the most boring is one I don’t understand."
+]},
+{question:"Which hobby do I want to start one day?",answers:[
+"The hobby I want to start one day is playing the guitar, drawing, or learning a sport.",
+"The hobby I want to start one day is something creative, fun, or relaxing.",
+"The hobby I want to start one day is a new activity like music or art."
+]},
+{question:"Which fast-food place do I love the most?",answers:[
+"The fast-food place I love the most is McDonald’s, Burger King, or KFC.",
+"The fast-food place I love the most is one where the food is tasty and fast.",
+"The fast-food place I love the most is where I go with friends or family."
+]},
+{question:"Which movie genre do I like the most?",answers:[
+"The movie genre I like the most is action, comedy, or horror.",
+"The movie genre I like the most is one that is exciting or funny.",
+"The movie genre I like the most is the one that entertains me."
+]},
+
+/* HOW */
+{question:"How do I get to school every morning?",answers:[
+"I get to school by bus, by car, or on foot.",
+"I get to school with my parents, with my friends, or by myself.",
+"I get to school using transportation or walking."
+]},
+{question:"How do I use my free time on rainy days?",answers:[
+"I use my free time on rainy days by watching videos, playing games, or using my phone.",
+"I use my free time on rainy days by staying inside and relaxing.",
+"I use my free time on rainy days by doing indoor activities."
+]},
+{question:"How do I celebrate my birthday?",answers:[
+"I celebrate my birthday with my family, with my friends, or both.",
+"I celebrate my birthday by having a party, going out, or staying at home.",
+"I celebrate my birthday by doing something fun."
+]},
+{question:"How do I feel about speaking in front of the class?",answers:[
+"I feel nervous, confident, or excited about speaking in front of the class.",
+"I feel a little scared or comfortable when I speak in front of the class.",
+"I feel different emotions when I speak in front of the class."
+]},
+{question:"How do I usually spend my money?",answers:[
+"I usually spend my money on snacks, games, or clothes.",
+"I usually spend my money on things I like or need.",
+"I usually spend my money on small things for fun."
+]},
+{question:"How do I prepare for a test?",answers:[
+"I prepare for a test by studying, taking notes, or reviewing the content.",
+"I prepare for a test by reading, practicing exercises, or asking for help.",
+"I prepare for a test by organizing my notes or sometimes I don’t prepare much."
+]},
+
+/* WHO */
+{question:"Who do I consider my hero in real life?",answers:[
+"The person I consider my hero in real life is my dad, my mom, or someone famous.",
+"The person I consider my hero in real life is someone who inspires me.",
+"The person I consider my hero in real life is someone I admire."
+]},
+{question:"Who do I want to invite to my next party?",answers:[
+"I want to invite my friends, my classmates, or my family.",
+"I want to invite people I have fun with.",
+"I want to invite people who make me happy."
+]},
+{question:"Who do I look like in my family?",answers:[
+"I look like my mom, my dad, or another relative in my family.",
+"I look like someone in my family in appearance or personality.",
+"I look like one of my parents or relatives."
+]},
+{question:"Who is the best actor or actress in my opinion?",answers:[
+"The best actor or actress in my opinion is someone famous like Zendaya or Tom Holland.",
+"The best actor or actress in my opinion is someone talented.",
+"The best actor or actress in my opinion is someone I enjoy watching."
+]},
+{question:"Who do I think is the funniest person in the world?",answers:[
+"The funniest person in the world in my opinion is a comedian, a YouTuber, or a friend.",
+"The funniest person in the world in my opinion is someone who makes me laugh.",
+"The funniest person in the world in my opinion is someone I watch often."
+]},
+{question:"Who do I usually send memes to?",answers:[
+"I usually send memes to my best friend, my group chat, or my siblings.",
+"I usually send memes to people I talk to every day.",
+"I usually send memes to friends who have the same humor as me."
+]},
+
+/* WHAT */
+{question:"What is my favorite pizza flavor?",answers:[
+"My favorite pizza flavor is pepperoni, margherita, or cheese.",
+"My favorite pizza flavor is something simple and tasty.",
+"My favorite pizza flavor is the one I usually order."
+]},
+{question:"What do I usually do after school?",answers:[
+"I usually study, relax, or eat something after school.",
+"I usually do homework, watch videos, or go out after school.",
+"I usually rest or use my phone after school."
+]},
+{question:"What do I always forget to bring to school?",answers:[
+"I always forget my notebook, my pencil case, or my homework.",
+"I always forget small school items.",
+"I always forget things when I am in a hurry."
+]},
+{question:"What movie do I know all the lines from?",answers:[
+"The movie I know all the lines from is Harry Potter, Toy Story, or another favorite movie.",
+"The movie I know all the lines from is one I watch many times.",
+"The movie I know all the lines from is one I really love."
+]},
+{question:"What superpower do I wish I had?",answers:[
+"The superpower I wish I had is flying, invisibility, or teleportation.",
+"The superpower I wish I had is one that helps me move or disappear.",
+"The superpower I wish I had is something fun or useful."
+]},
+{question:"What career do I imagine for myself in the future?",answers:[
+"The career I imagine for myself is being a doctor, an engineer, or a designer.",
+"The career I imagine for myself is something interesting or successful.",
+"The career I imagine for myself is something I enjoy."
+]},
+
+/* WHERE */
+{question:"Where do I want to go for my next school trip?",answers:[
+"I want to go to the zoo, to a museum, or to a park.",
+"I want to go somewhere fun or educational.",
+"I want to go somewhere I can learn and enjoy."
+]},
+{question:"Where do I want to travel with my best friends?",answers:[
+"I want to travel to another country, to the beach, or to a big city.",
+"I want to travel somewhere exciting or relaxing.",
+"I want to travel to a place where we can have fun together."
+]},
+{question:"Where do I relax the most?",answers:[
+"I relax the most at home, in my room, or at the beach.",
+"I relax the most in quiet places.",
+"I relax the most where I feel safe."
+]},
+{question:"Where do I put my backpack when I get home?",answers:[
+"I put my backpack in my room, in the living room, or near the door.",
+"I put my backpack somewhere easy to find.",
+"I put my backpack in a place I remember."
+]},
+{question:"Where do I want to have my birthday party?",answers:[
+"I want to have my birthday party at home, at a club, or at a restaurant.",
+"I want to have my birthday party in a fun place.",
+"I want to have my birthday party in a comfortable place."
+]},
+{question:"Where do I hate going?",answers:[
+"I hate going to the dentist, to boring places, or somewhere uncomfortable.",
+"I hate going to places that are stressful.",
+"I hate going to places I don’t enjoy."
+]},
+
+/* WHEN */
+{question:"When do I usually play online with my friends?",answers:[
+"I usually play online on weekends, at night, or after school.",
+"I usually play online when I have free time.",
+"I usually play online when I feel relaxed."
+]},
+{question:"When do I usually get home from school?",answers:[
+"I usually get home from school at 1 PM, at 4 PM, or depending on the day.",
+"I usually get home from school in the afternoon.",
+"I usually get home from school at different times."
+]},
+{question:"When do I feel the most sleepy during the day?",answers:[
+"I feel the most sleepy during the day in the morning, after lunch, or at night.",
+"I feel the most sleepy during the day when I don’t sleep well.",
+"I feel the most sleepy during the day in boring moments."
+]},
+{question:"When do I feel like eating something sweet?",answers:[
+"I feel like eating something sweet after lunch, at night, or anytime.",
+"I feel like eating something sweet when I am bored.",
+"I feel like eating something sweet during the day."
+]},
+{question:"When do I usually post photos or videos?",answers:[
+"I usually post photos or videos on weekends or when I go out.",
+"I usually post photos or videos when I want to share something.",
+"I usually post photos or videos when I have good content."
+]},
+{question:"When do I usually use my phone the most?",answers:[
+"I usually use my phone the most at night or in my free time.",
+"I usually use my phone the most when I am bored.",
+"I usually use my phone the most after school or before sleeping."
+]},
+
+/* WHY */
+{question:"Why do I want to visit another country?",answers:[
+"I want to visit another country to explore, learn, and have new experiences.",
+"I want to visit another country to see new places and meet people.",
+"I want to visit another country because I enjoy traveling."
+]},
+{question:"Why do I study English?",answers:[
+"I study English because it is important and useful.",
+"I study English to travel and communicate.",
+"I study English because I enjoy it."
+]},
+{question:"Why do I like my favorite subject?",answers:[
+"I like my favorite subject because it is easy or interesting.",
+"I like my favorite subject because I understand it.",
+"I like my favorite subject because it is fun."
+]},
+{question:"Why do I prefer staying at home sometimes?",answers:[
+"I prefer staying at home because I feel comfortable.",
+"I prefer staying at home because I like my space.",
+"I prefer staying at home because I feel relaxed."
+]},
+{question:"Why is AI amazing?",answers:[
+"AI is amazing because it answers questions and helps people.",
+"AI is amazing because it is fast and useful.",
+"AI is amazing because it makes life easier."
+]},
+{question:"Why do my parents get mad sometimes?",answers:[
+"My parents get mad sometimes because I don’t listen or don’t do my chores.",
+"My parents get mad sometimes because of my behavior or school.",
+"My parents get mad sometimes when I do something wrong."
+]}
+
+];
+
+function generateQuestion(){
+  let available = questions.filter(q => !usedQuestions.includes(q.question));
+
+  if(available.length === 0){
+    usedQuestions = [];
+    available = questions;
+  }
+
+  const selected = available[Math.floor(Math.random() * available.length)];
+  usedQuestions.push(selected.question);
+
+  document.getElementById("question").innerText = "Your question: " + selected.question;
+  document.getElementById("answers").innerHTML =
+    "<b>Answer options:</b><br>- " + selected.answers.join("<br>- ");
+}
+
+</script>
+
+</body>
+</html>
