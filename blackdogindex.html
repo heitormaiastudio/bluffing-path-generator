@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluffing Path - Black Dog Edition</title>
+    <style>
+        body { font-family: 'Poppins', Arial, sans-serif; background: linear-gradient(135deg,#0f1220,#1b2040); display:flex; justify-content:center; align-items:center; height:100vh; margin:0; color: #333; }
+        .container { background:white; padding:30px; border-radius:20px; width:450px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+        h2 { color: #1b2040; margin-bottom: 10px; }
+        p { font-size: 0.9em; color: #666; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; text-align: center; }
+        button { width:100%; padding:12px; margin-top:10px; border:none; border-radius:10px; background:#1b2040; color:white; cursor:pointer; font-weight:bold; transition: 0.3s; }
+        button:hover { background: #303a7d; }
+        .question { margin-top:20px; font-weight:bold; color: #d32f2f; font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .answers { margin-top:15px; text-align:left; font-size: 0.95em; line-height: 1.6; }
+        .hidden { display:none; }
+        .instruction { font-style: italic; font-size: 0.8em; color: #888; margin-top: 5px; }
+        strong { color: #1b2040; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="login">
+    <h2>Bluffing Path</h2>
+    <p>Black Dog Edition - Access Code</p>
+    <input type="password" id="code" placeholder="Enter code">
+    <button onclick="checkCode()">Enter Game</button>
+</div>
+
+<div class="container hidden" id="app">
+    <h2>Question Generator</h2>
+    <p class="instruction">Scan the board and click to challenge your friends!</p>
+    <button onclick="generateQuestion()">Generate Question</button>
+    
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+</div>
+
+<script>
+const accessCode = "BLUFF2026";
+let usedQuestions = [];
+
+function checkCode(){
+    if(document.getElementById("code").value === accessCode){
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("app").classList.remove("hidden");
+    } else {
+        alert("Invalid code! Please check with Mr. Heitor.");
+    }
+}
+
+const questions = [
+    /* WHO */
+    {question:"Who spied the Black Dog first in the gloomy morning?", answers:["Mr. Hope spied the dog first. (True)", "Adeline spied the dog first.", "Small Hope spied the dog first."]},
+    {question:"Who bellowed to report the terrifying animal?", answers:["Mrs. Hope bellowed for help.", "Mr. Hope bellowed to the police station. (True)", "The policeman bellowed at the dog."]},
+    {question:"Who showed no irrational fear and went outside?", answers:["Small Hope showed no irrational fear. (True)", "Mr. Hope went outside first.", "Adeline decided to go outside."]},
+    {question:"Who followed Small Hope through the dark woods?", answers:["A ferocious tiger followed her.", "The Black Dog followed Small Hope. (True)", "A wicked fox followed the girl."]},
+
+    /* WHAT */
+    {question:"What did Mr. Hope think when he saw the shadow?", answers:["He thought it looked like a terrifying tiger.", "He claimed it was as big as an enormous elephant. (True)", "He said it resembled a morbid monster."]},
+    {question:"What was the irrational reaction of the family?", answers:["They hid under the bed because they were terrified. (True)", "They played with the Black Dog.", "They cooked a gloomy breakfast."]},
+    {question:"What powerful words did Small Hope use to lead the dog?", answers:["She used a song and ran bravely. (True)", "She shouted morbid words.", "She offered the dog a ferocious snack."]},
+    {question:"What happened as Small Hope recovered her courage?", answers:["The dog became tiny and followed her. (True)", "The dog became more ferocious and wicked.", "The dog disappeared into the gloomy sky."]},
+
+    /* WHERE */
+    {question:"Where did Mrs. Hope see the dog's morbid shadow?", answers:["She saw the shadow on the kitchen wall. (True)", "She spotted it in the gloomy bathroom.", "She found it inside the irrational wardrobe."]},
+    {question:"Where did the family hide from their terrifying fear?", answers:["They crawled under the heavy duvets since they were scared. (True)", "They ran to the ferocious park.", "They stayed in the gloomy garden."]},
+    {question:"Where was the dog when Adeline spied it?", answers:["It sat near the gloomy pond. (True)", "It stood on top of the terrifying garage.", "It lay on the ferocious front porch."]},
+    {question:"Where did Small Hope go to face her fear?", answers:["She walked into the terrifying woods. (True)", "She went to the irrational police station.", "She traveled to a wicked city."]},
+
+    /* WHY */
+    {question:"Why did the family have irrational feelings?", answers:["Because the dog appeared terrifyingly huge. (True)", "Because they lost their gloomy keys.", "Because it was a morbid winter day."]},
+    {question:"Why did the dog become small and less ferocious?", answers:["Because Small Hope showed no fear. (True)", "Because it did not eat its morbid dinner.", "Because the sun shone too gloomily."]},
+    {question:"Why did Mr. Hope call the police station?", answers:["Because he wanted to report a terrifying monster. (True)", "Because he needed a wicked new job.", "Because the dog stole his irrational breakfast."]},
+    {question:"Why did Small Hope feel brave at the end?", answers:["Because she recovered her courage and faced the dog. (True)", "Because the dog was wicked and ferocious.", "Because she stayed in the gloomy house."]},
+
+    /* WHEN */
+    {question:"When did the Black Dog first arrive at the house?", answers:["It arrived on a gloomy Monday morning. (True)", "It arrived during a terrifying party.", "It arrived at a morbid midnight."]},
+    {question:"When did the family stop being so terrified?", answers:["They felt better when Small Hope returned. (True)", "They felt better after a morbid week.", "They felt better when the gloomy police arrived."]},
+    {question:"When did the dog chase Small Hope into the house?", answers:["It chased her when she ran through the cat flap. (True)", "It chased her during a morbid lunchtime.", "It chased her when she yelped loudly."]},
+    {question:"When did the family realize their fear was irrational?", answers:["They realized it at the very end of the story. (True)", "They realized it from the morbid start.", "They realized it when they woke up."]},
+
+    /* WHICH */
+    {question:"Which adjective best describes the dog at the start?", answers:["It was terrifying and enormous. (True)", "It was tiny and foolish.", "It was gloomy and friendly."]},
+    {question:"Which character showed the most irrational behavior?", answers:["Mr. Hope showed irrational behavior by hiding. (True)", "Small Hope showed morbid behavior.", "The policeman showed ferocious behavior."]},
+    {question:"Which room felt the most gloomy for the family?", answers:["The bedroom where they hid felt gloomy. (True)", "The kitchen where they cooked felt ferocious.", "The irrational garden felt happy."]},
+    {question:"Which evidence shows that the dog was tiny at the end?", answers:["It jumped through the tiny cat flap. (True)", "It leaped over a terrifying bus.", "It hopped over a ferocious mountain."]}
+];
+
+function generateQuestion(){
+    let available = questions.filter(q => !usedQuestions.includes(q.question));
+    if(available.length === 0){ usedQuestions = []; available = questions; }
+    
+    const selected = available[Math.floor(Math.random() * available.length)];
+    usedQuestions.push(selected.question);
+    
+    document.getElementById("question").innerText = selected.question;
+    
+    let shuffledAnswers = [...selected.answers].sort(() => Math.random() - 0.5);
+    
+    document.getElementById("answers").innerHTML = 
+        "<strong>Options (Use 'because' to justify your choice):</strong><br>• " + 
+        shuffledAnswers.join("<br>• ").replace("(True)", "");
+}
+</script>
+</body>
+</html>
