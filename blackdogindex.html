@@ -3,106 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bluffing Path - Black Dog Edition</title>
+    <title>Retrieving Path: Black Dog Edition</title>
     <style>
-        body { font-family: 'Poppins', Arial, sans-serif; background: linear-gradient(135deg,#0f1220,#1b2040); display:flex; justify-content:center; align-items:center; height:100vh; margin:0; color: #333; }
-        .container { background:white; padding:30px; border-radius:20px; width:450px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
-        h2 { color: #1b2040; margin-bottom: 10px; }
-        p { font-size: 0.9em; color: #666; }
-        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; text-align: center; }
-        button { width:100%; padding:12px; margin-top:10px; border:none; border-radius:10px; background:#1b2040; color:white; cursor:pointer; font-weight:bold; transition: 0.3s; }
-        button:hover { background: #303a7d; }
-        .question { margin-top:20px; font-weight:bold; color: #d32f2f; font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .answers { margin-top:15px; text-align:left; font-size: 0.95em; line-height: 1.6; }
-        .hidden { display:none; }
-        .instruction { font-style: italic; font-size: 0.8em; color: #888; margin-top: 5px; }
-        strong { color: #1b2040; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .logo-school { 
+            height: 126px; /* Aumentado 40% (de 90px para 126px) */
+            margin-bottom: 20px;
+        }
+        .logo-game { 
+            max-width: 320px; /* Use esse espaço para o seu novo logo hierarquizado */
+            display: block; 
+            margin: 0 auto; 
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            flex-grow: 0;
+            margin-bottom: 40px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            color: white;
+        }
+
+        button:active { transform: scale(0.95); }
+
+        /* Cores seguindo a paleta do tabuleiro */
+        .btn-who { background-color: #7d6fb3; }
+        .btn-what { background-color: #5d4a99; }
+        .btn-where { background-color: #4a3b80; }
+        .btn-when { background-color: #3a2d66; }
+        .btn-why { background-color: #2a1f4d; }
+        .btn-which { background-color: #1a1233; }
+
+        .question-box { display: none; }
+        .question-text { 
+            font-size: 22px; 
+            margin: 20px 0; 
+            font-weight: 600; 
+            color: #2a1f4d;
+            line-height: 1.4;
+        }
+        
+        .answer-text { 
+            display: none; 
+            margin-top: 20px; 
+            padding: 15px; 
+            background-color: #e8f5e9; 
+            border-left: 5px solid #4caf50;
+            font-style: italic;
+            color: #2e7d32;
+            text-align: left;
+        }
+
+        .btn-reveal { background-color: #4caf50; margin-top: 10px; width: 100%; }
+        .btn-back { background-color: #888; margin-top: 20px; width: 100%; }
+
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        .logo-maia { 
+            height: 35px; 
+            margin-top: 8px;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
 
-<div class="container" id="login">
-    <h2>Bluffing Path</h2>
-    <p>Black Dog Edition - Access Code</p>
-    <input type="password" id="code" placeholder="Enter code">
-    <button onclick="checkCode()">Enter Game</button>
-</div>
+    <div class="header">
+        <img src="2025 & 2026 TBSRJ Logo - Crest (stroke).png" alt="School Logo" class="logo-school">
+        <img src="logo RP.png" alt="Retrieving Path: Black Dog Edition" class="logo-game">
+    </div>
 
-<div class="container hidden" id="app">
-    <h2>Question Generator</h2>
-    <p class="instruction">Scan the board and click to challenge your friends!</p>
-    <button onclick="generateQuestion()">Generate Question</button>
-    
-    <div class="question" id="question"></div>
-    <div class="answers" id="answers"></div>
-</div>
+    <div class="container" id="main-container">
+        <div id="menu" class="menu-grid">
+            <button class="btn-who" onclick="showQuestion('who')">WHO</button>
+            <button class="btn-what" onclick="showQuestion('what')">WHAT</button>
+            <button class="btn-where" onclick="showQuestion('where')">WHERE</button>
+            <button class="btn-when" onclick="showQuestion('when')">WHEN</button>
+            <button class="btn-why" onclick="showQuestion('why')">WHY</button>
+            <button class="btn-which" onclick="showQuestion('which')">WHICH</button>
+        </div>
 
-<script>
-const accessCode = "BLUFF2026";
-let usedQuestions = [];
+        <div id="question-display" class="question-box">
+            <p id="category-title" style="font-weight: bold; color: #888; text-transform: uppercase; margin-top: 0;"></p>
+            <div id="question-content" class="question-text"></div>
+            <button class="btn-reveal" onclick="revealAnswer()">Reveal Truth</button>
+            <div id="answer-content" class="answer-text"></div>
+            <button class="btn-back" onclick="goBack()">Back to Categories</button>
+        </div>
+    </div>
 
-function checkCode(){
-    if(document.getElementById("code").value === accessCode){
-        document.getElementById("login").classList.add("hidden");
-        document.getElementById("app").classList.remove("hidden");
-    } else {
-        alert("Invalid code! Please check with Mr. Heitor.");
-    }
-}
+    <div class="footer">
+        <div>Designed and offered by:</div>
+        <img src="maia studio.png" alt="Maia Studio" class="logo-maia">
+    </div>
 
-const questions = [
-    /* WHO */
-    {question:"Who spied the Black Dog first in the gloomy morning?", answers:["Mr. Hope spied the dog first. (True)", "Adeline spied the dog first.", "Small Hope spied the dog first."]},
-    {question:"Who bellowed to report the terrifying animal?", answers:["Mrs. Hope bellowed for help.", "Mr. Hope bellowed to the police station. (True)", "The policeman bellowed at the dog."]},
-    {question:"Who showed no irrational fear and went outside?", answers:["Small Hope showed no irrational fear. (True)", "Mr. Hope went outside first.", "Adeline decided to go outside."]},
-    {question:"Who followed Small Hope through the dark woods?", answers:["A ferocious tiger followed her.", "The Black Dog followed Small Hope. (True)", "A wicked fox followed the girl."]},
+    <script>
+        const questions = {
+            who: [
+                { q: "Who was the first person to spot the Black Dog?", a: "Mr. Hope." },
+                { q: "Who described the dog's nose as being 'as big as a fridge'?", a: "Mrs. Hope." },
+                { q: "Who was the only person brave enough to go outside?", a: "Small (the youngest child)." },
+                { q: "Who did the Black Dog follow through the playground?", a: "Small." },
+                { q: "Who realized the dog wasn't actually a giant monster?", a: "Small and eventually the rest of the family." }
+            ],
+            what: [
+                { q: "What did Mr. Hope do when he saw the dog?", a: "He called the police." },
+                { q: "What was the dog's size compared to at the beginning?", a: "A Tiger, then an Elephant, then a T-Rex." },
+                { q: "What did Small play with the dog outside?", a: "A game of chase (run and hide)." },
+                { q: "What happened to the dog as Small ran through the tunnel?", a: "It began to shrink and become smaller." },
+                { q: "What did the family call the dog at the very end?", a: "Just a Black Dog (no longer a monster)." }
+            ],
+            where: [
+                { q: "Where did Mr. Hope first see the Black Dog?", a: "Outside the window, in the snow." },
+                { q: "Where did Adeline hide when she saw the dog?", a: "Under the table." },
+                { q: "Where did the family finally feel safe from the dog?", a: "In the kitchen, with the doors and windows shut." },
+                { q: "Where did the smallest member of the family, Small, go?", a: "Outside, into the garden to face the dog." },
+                { q: "Where did the Black Dog end up at the end of the story?", a: "Inside the house, curled up by the fire." }
+            ],
+            when: [
+                { q: "When did the Black Dog appear in the story?", a: "Early in the morning, when it was still snowing." },
+                { q: "When did the dog grow to the size of a Jeffers' house?", a: "When the older members of the family looked at it." },
+                { q: "When did the dog fit through the cat flap?", a: "At the very end, after the chase with Small." },
+                { q: "When did the family stop being afraid?", a: "When they saw the dog inside the house, looking normal." }
+            ],
+            why: [
+                { q: "Why did the family think the dog was a monster?", a: "Because of their own irrational fear." },
+                { q: "Why did the dog get smaller during the chase?", a: "Because Small was not afraid of it." },
+                { q: "Why did Adeline think the dog's eyes were like lamps?", a: "Because she was terrified and exaggerating its size." },
+                { q: "Why did the family finally come out from under the covers?", a: "Because they saw that the dog was now small and harmless." }
+            ],
+            which: [
+                { q: "Which character showed the most courage?", a: "Small." },
+                { q: "Which room did the family stay in most of the time?", a: "The kitchen." },
+                { q: "Which word best describes the family's fear?", a: "Irrational (or morbid)." },
+                { q: "Which family member called the police?", a: "Mr. Hope." }
+            ]
+        };
 
-    /* WHAT */
-    {question:"What did Mr. Hope think when he saw the shadow?", answers:["He thought it looked like a terrifying tiger.", "He claimed it was as big as an enormous elephant. (True)", "He said it resembled a morbid monster."]},
-    {question:"What was the irrational reaction of the family?", answers:["They hid under the bed because they were terrified. (True)", "They played with the Black Dog.", "They cooked a gloomy breakfast."]},
-    {question:"What powerful words did Small Hope use to lead the dog?", answers:["She used a song and ran bravely. (True)", "She shouted morbid words.", "She offered the dog a ferocious snack."]},
-    {question:"What happened as Small Hope recovered her courage?", answers:["The dog became tiny and followed her. (True)", "The dog became more ferocious and wicked.", "The dog disappeared into the gloomy sky."]},
+        function showQuestion(category) {
+            const catQuestions = questions[category];
+            const randomQ = catQuestions[Math.floor(Math.random() * catQuestions.length)];
+            
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('question-display').style.display = 'block';
+            
+            document.getElementById('category-title').innerText = category;
+            document.getElementById('question-content').innerText = randomQ.q;
+            document.getElementById('answer-content').innerText = randomQ.a;
+            document.getElementById('answer-content').style.display = 'none';
+        }
 
-    /* WHERE */
-    {question:"Where did Mrs. Hope see the dog's morbid shadow?", answers:["She saw the shadow on the kitchen wall. (True)", "She spotted it in the gloomy bathroom.", "She found it inside the irrational wardrobe."]},
-    {question:"Where did the family hide from their terrifying fear?", answers:["They crawled under the heavy duvets since they were scared. (True)", "They ran to the ferocious park.", "They stayed in the gloomy garden."]},
-    {question:"Where was the dog when Adeline spied it?", answers:["It sat near the gloomy pond. (True)", "It stood on top of the terrifying garage.", "It lay on the ferocious front porch."]},
-    {question:"Where did Small Hope go to face her fear?", answers:["She walked into the terrifying woods. (True)", "She went to the irrational police station.", "She traveled to a wicked city."]},
+        function revealAnswer() {
+            document.getElementById('answer-content').style.display = 'block';
+        }
 
-    /* WHY */
-    {question:"Why did the family have irrational feelings?", answers:["Because the dog appeared terrifyingly huge. (True)", "Because they lost their gloomy keys.", "Because it was a morbid winter day."]},
-    {question:"Why did the dog become small and less ferocious?", answers:["Because Small Hope showed no fear. (True)", "Because it did not eat its morbid dinner.", "Because the sun shone too gloomily."]},
-    {question:"Why did Mr. Hope call the police station?", answers:["Because he wanted to report a terrifying monster. (True)", "Because he needed a wicked new job.", "Because the dog stole his irrational breakfast."]},
-    {question:"Why did Small Hope feel brave at the end?", answers:["Because she recovered her courage and faced the dog. (True)", "Because the dog was wicked and ferocious.", "Because she stayed in the gloomy house."]},
-
-    /* WHEN */
-    {question:"When did the Black Dog first arrive at the house?", answers:["It arrived on a gloomy Monday morning. (True)", "It arrived during a terrifying party.", "It arrived at a morbid midnight."]},
-    {question:"When did the family stop being so terrified?", answers:["They felt better when Small Hope returned. (True)", "They felt better after a morbid week.", "They felt better when the gloomy police arrived."]},
-    {question:"When did the dog chase Small Hope into the house?", answers:["It chased her when she ran through the cat flap. (True)", "It chased her during a morbid lunchtime.", "It chased her when she yelped loudly."]},
-    {question:"When did the family realize their fear was irrational?", answers:["They realized it at the very end of the story. (True)", "They realized it from the morbid start.", "They realized it when they woke up."]},
-
-    /* WHICH */
-    {question:"Which adjective best describes the dog at the start?", answers:["It was terrifying and enormous. (True)", "It was tiny and foolish.", "It was gloomy and friendly."]},
-    {question:"Which character showed the most irrational behavior?", answers:["Mr. Hope showed irrational behavior by hiding. (True)", "Small Hope showed morbid behavior.", "The policeman showed ferocious behavior."]},
-    {question:"Which room felt the most gloomy for the family?", answers:["The bedroom where they hid felt gloomy. (True)", "The kitchen where they cooked felt ferocious.", "The irrational garden felt happy."]},
-    {question:"Which evidence shows that the dog was tiny at the end?", answers:["It jumped through the tiny cat flap. (True)", "It leaped over a terrifying bus.", "It hopped over a ferocious mountain."]}
-];
-
-function generateQuestion(){
-    let available = questions.filter(q => !usedQuestions.includes(q.question));
-    if(available.length === 0){ usedQuestions = []; available = questions; }
-    
-    const selected = available[Math.floor(Math.random() * available.length)];
-    usedQuestions.push(selected.question);
-    
-    document.getElementById("question").innerText = selected.question;
-    
-    let shuffledAnswers = [...selected.answers].sort(() => Math.random() - 0.5);
-    
-    document.getElementById("answers").innerHTML = 
-        "<strong>Options (Use 'because' to justify your choice):</strong><br>• " + 
-        shuffledAnswers.join("<br>• ").replace("(True)", "");
-}
-</script>
+        function goBack() {
+            document.getElementById('menu').style.display = 'grid';
+            document.getElementById('question-display').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
