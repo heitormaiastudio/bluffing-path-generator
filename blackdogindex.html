@@ -22,15 +22,14 @@
             width: 100%;
         }
         .logo-school { 
-            height: 126px; /* Aumentado 40% (de 90px para 126px) */
+            height: 120px; 
             margin-bottom: 20px;
         }
         .logo-game { 
-            max-width: 320px; /* Use esse espaço para o seu novo logo hierarquizado */
+            max-width: 320px; 
             display: block; 
             margin: 0 auto; 
         }
-
         .container {
             background: white;
             padding: 30px;
@@ -39,16 +38,13 @@
             width: 90%;
             max-width: 500px;
             text-align: center;
-            flex-grow: 0;
             margin-bottom: 40px;
         }
-
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
-
         button {
             padding: 15px;
             font-size: 18px;
@@ -59,17 +55,13 @@
             transition: transform 0.2s, background 0.2s;
             color: white;
         }
-
         button:active { transform: scale(0.95); }
-
-        /* Cores seguindo a paleta do tabuleiro */
         .btn-who { background-color: #7d6fb3; }
         .btn-what { background-color: #5d4a99; }
         .btn-where { background-color: #4a3b80; }
         .btn-when { background-color: #3a2d66; }
         .btn-why { background-color: #2a1f4d; }
         .btn-which { background-color: #1a1233; }
-
         .question-box { display: none; }
         .question-text { 
             font-size: 22px; 
@@ -78,7 +70,6 @@
             color: #2a1f4d;
             line-height: 1.4;
         }
-        
         .answer-text { 
             display: none; 
             margin-top: 20px; 
@@ -89,10 +80,8 @@
             color: #2e7d32;
             text-align: left;
         }
-
         .btn-reveal { background-color: #4caf50; margin-top: 10px; width: 100%; }
         .btn-back { background-color: #888; margin-top: 20px; width: 100%; }
-
         .footer {
             margin-top: auto;
             text-align: center;
@@ -110,8 +99,8 @@
 <body>
 
     <div class="header">
-        <img src="2025 & 2026 TBSRJ Logo - Crest (stroke).png" alt="School Logo" class="logo-school">
-        <img src="logo RP.png" alt="Retrieving Path: Black Dog Edition" class="logo-game">
+        <img src="logo-school.png" alt="School Logo" class="logo-school">
+        <img src="logo-rp.png" alt="Retrieving Path: Black Dog Edition" class="logo-game">
     </div>
 
     <div class="container" id="main-container">
@@ -135,7 +124,7 @@
 
     <div class="footer">
         <div>Designed and offered by:</div>
-        <img src="maia studio.png" alt="Maia Studio" class="logo-maia">
+        <img src="logo-maia.png" alt="Maia Studio" class="logo-maia">
     </div>
 
     <script>
@@ -184,10 +173,8 @@
         function showQuestion(category) {
             const catQuestions = questions[category];
             const randomQ = catQuestions[Math.floor(Math.random() * catQuestions.length)];
-            
             document.getElementById('menu').style.display = 'none';
             document.getElementById('question-display').style.display = 'block';
-            
             document.getElementById('category-title').innerText = category;
             document.getElementById('question-content').innerText = randomQ.q;
             document.getElementById('answer-content').innerText = randomQ.a;
