@@ -5,56 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retrieving Path: Black Dog Edition</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .logo-school { 
-            height: 120px; 
-            margin-bottom: 20px;
-        }
-        .logo-game { 
-            max-width: 320px; 
-            display: block; 
-            margin: 0 auto; 
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        button {
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-            color: white;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .header { text-align: center; margin-bottom: 20px; width: 100%; }
+        .logo-school { height: 120px; margin-bottom: 15px; }
+        .logo-game { max-width: 300px; display: block; margin: 0 auto; }
+        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 90%; max-width: 450px; text-align: center; position: relative; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        button { padding: 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.2s; }
         button:active { transform: scale(0.95); }
         .btn-who { background-color: #7d6fb3; }
         .btn-what { background-color: #5d4a99; }
@@ -63,47 +20,27 @@
         .btn-why { background-color: #2a1f4d; }
         .btn-which { background-color: #1a1233; }
         .question-box { display: none; }
-        .question-text { 
-            font-size: 22px; 
-            margin: 20px 0; 
-            font-weight: 600; 
-            color: #2a1f4d;
-            line-height: 1.4;
-        }
-        .answer-text { 
-            display: none; 
-            margin-top: 20px; 
-            padding: 15px; 
-            background-color: #e8f5e9; 
-            border-left: 5px solid #4caf50;
-            font-style: italic;
-            color: #2e7d32;
-            text-align: left;
-        }
-        .btn-reveal { background-color: #4caf50; margin-top: 10px; width: 100%; }
-        .btn-back { background-color: #888; margin-top: 20px; width: 100%; }
-        .footer {
-            margin-top: auto;
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-        .logo-maia { 
-            height: 35px; 
-            margin-top: 8px;
-            opacity: 0.8;
-        }
+        
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .sc-help { background: #ff9800; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border: none; }
+        
+        .question-text { font-size: 20px; margin: 15px 0; font-weight: 600; color: #2a1f4d; line-height: 1.4; }
+        
+        .sc-box { display: none; background: #fff3e0; border: 1px dashed #ff9800; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #e65100; }
+        .answer-text { display: none; margin-top: 15px; padding: 15px; background-color: #e8f5e9; border-left: 5px solid #4caf50; font-style: italic; color: #2e7d32; text-align: left; font-size: 15px; }
+        
+        .btn-reveal { background-color: #4caf50; width: 100%; margin-top: 10px; }
+        .btn-back { background-color: #888; width: 100%; margin-top: 15px; }
+        .footer { margin-top: 30px; text-align: center; color: #666; font-size: 12px; }
+        .logo-maia { height: 35px; margin-top: 5px; opacity: 0.8; }
     </style>
 </head>
 <body>
-
     <div class="header">
         <img src="logo-school.png" alt="School Logo" class="logo-school">
-        <img src="logo-rp.png" alt="Retrieving Path: Black Dog Edition" class="logo-game">
+        <img src="logo-rp.png" alt="Retrieving Path" class="logo-game">
     </div>
-
-    <div class="container" id="main-container">
+    <div class="container">
         <div id="menu" class="menu-grid">
             <button class="btn-who" onclick="showQuestion('who')">WHO</button>
             <button class="btn-what" onclick="showQuestion('what')">WHAT</button>
@@ -114,14 +51,19 @@
         </div>
 
         <div id="question-display" class="question-box">
-            <p id="category-title" style="font-weight: bold; color: #888; text-transform: uppercase; margin-top: 0;"></p>
+            <div class="q-header">
+                <p id="cat-label" style="color: #888; font-size: 12px; text-transform: uppercase; margin: 0;"></p>
+                <button class="sc-help" onclick="toggleSC()" title="Show Success Criteria">?</button>
+            </div>
+            
+            <div id="sc-content" class="sc-box"></div>
             <div id="question-content" class="question-text"></div>
+            
             <button class="btn-reveal" onclick="revealAnswer()">Reveal Truth</button>
             <div id="answer-content" class="answer-text"></div>
             <button class="btn-back" onclick="goBack()">Back to Categories</button>
         </div>
     </div>
-
     <div class="footer">
         <div>Designed and offered by:</div>
         <img src="logo-maia.png" alt="Maia Studio" class="logo-maia">
@@ -130,65 +72,18 @@
     <script>
         const questions = {
             who: [
-                { q: "Who was the first person to spot the Black Dog?", a: "Mr. Hope." },
-                { q: "Who described the dog's nose as being 'as big as a fridge'?", a: "Mrs. Hope." },
-                { q: "Who was the only person brave enough to go outside?", a: "Small (the youngest child)." },
-                { q: "Who did the Black Dog follow through the playground?", a: "Small." },
-                { q: "Who realized the dog wasn't actually a giant monster?", a: "Small and eventually the rest of the family." }
+                {q:"Who was the first character to experience 'irrational fear'?", sc:"Mention the name of the father and use 'spotted'.", a:"Mr. Hope was the first one."},
+                {q:"Who stayed 'gloomy' and hid under the duvet?", sc:"List all characters except Small.", a:"The older members of the family (Mr. Hope, Mrs. Hope, Adeline, and Maurice)."},
+                {q:"Who was the only one not affected by the morbid atmosphere?", sc:"Focus on the youngest member.", a:"Small, the youngest child."}
             ],
             what: [
-                { q: "What did Mr. Hope do when he saw the dog?", a: "He called the police." },
-                { q: "What was the dog's size compared to at the beginning?", a: "A Tiger, then an Elephant, then a T-Rex." },
-                { q: "What did Small play with the dog outside?", a: "A game of chase (run and hide)." },
-                { q: "What happened to the dog as Small ran through the tunnel?", a: "It began to shrink and become smaller." },
-                { q: "What did the family call the dog at the very end?", a: "Just a Black Dog (no longer a monster)." }
+                {q:"What did the family do that showed they had a 'morbid' imagination?", sc:"Compare the dog to an extinct animal.", a:"They imagined the dog was the size of a T-Rex or an Elephant."},
+                {q:"What did Small do to make the dog shrink?", sc:"Explain the action and her lack of fear.", a:"She showed no fear and played a game of chase with it."}
             ],
             where: [
-                { q: "Where did Mr. Hope first see the Black Dog?", a: "Outside the window, in the snow." },
-                { q: "Where did Adeline hide when she saw the dog?", a: "Under the table." },
-                { q: "Where did the family finally feel safe from the dog?", a: "In the kitchen, with the doors and windows shut." },
-                { q: "Where did the smallest member of the family, Small, go?", a: "Outside, into the garden to face the dog." },
-                { q: "Where did the Black Dog end up at the end of the story?", a: "Inside the house, curled up by the fire." }
-            ],
-            when: [
-                { q: "When did the Black Dog appear in the story?", a: "Early in the morning, when it was still snowing." },
-                { q: "When did the dog grow to the size of a Jeffers' house?", a: "When the older members of the family looked at it." },
-                { q: "When did the dog fit through the cat flap?", a: "At the very end, after the chase with Small." },
-                { q: "When did the family stop being afraid?", a: "When they saw the dog inside the house, looking normal." }
+                {q:"Where did the family hide because of their 'irrational' fear?", sc:"List 2 specific places inside the house.", a:"Under the covers, under the table, and behind the curtains."},
+                {q:"Where did the dog grow to its most 'gloomy' and giant size?", sc:"Mention the location relative to the house.", a:"Outside the house, in the family's mind/perception."}
             ],
             why: [
-                { q: "Why did the family think the dog was a monster?", a: "Because of their own irrational fear." },
-                { q: "Why did the dog get smaller during the chase?", a: "Because Small was not afraid of it." },
-                { q: "Why did Adeline think the dog's eyes were like lamps?", a: "Because she was terrified and exaggerating its size." },
-                { q: "Why did the family finally come out from under the covers?", a: "Because they saw that the dog was now small and harmless." }
-            ],
-            which: [
-                { q: "Which character showed the most courage?", a: "Small." },
-                { q: "Which room did the family stay in most of the time?", a: "The kitchen." },
-                { q: "Which word best describes the family's fear?", a: "Irrational (or morbid)." },
-                { q: "Which family member called the police?", a: "Mr. Hope." }
-            ]
-        };
-
-        function showQuestion(category) {
-            const catQuestions = questions[category];
-            const randomQ = catQuestions[Math.floor(Math.random() * catQuestions.length)];
-            document.getElementById('menu').style.display = 'none';
-            document.getElementById('question-display').style.display = 'block';
-            document.getElementById('category-title').innerText = category;
-            document.getElementById('question-content').innerText = randomQ.q;
-            document.getElementById('answer-content').innerText = randomQ.a;
-            document.getElementById('answer-content').style.display = 'none';
-        }
-
-        function revealAnswer() {
-            document.getElementById('answer-content').style.display = 'block';
-        }
-
-        function goBack() {
-            document.getElementById('menu').style.display = 'grid';
-            document.getElementById('question-display').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+                {q:"Why is the family's fear described as 'irrational'?", sc:"Explain that the size was only in their minds.", a:"Because the dog wasn't actually a monster; their fear made it look big."},
+                {q:"Why did Small go outside when everyone else was scared?",
