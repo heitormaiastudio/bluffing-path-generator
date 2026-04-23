@@ -7,11 +7,11 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
         .header { text-align: center; margin-bottom: 20px; width: 100%; }
-        .logo-school { height: 120px; margin-bottom: 15px; }
-        .logo-game { max-width: 300px; display: block; margin: 0 auto; }
-        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 90%; max-width: 450px; text-align: center; position: relative; }
+        .logo-school { height: 110px; margin-bottom: 15px; }
+        .logo-game { max-width: 280px; display: block; margin: 0 auto; }
+        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 90%; max-width: 450px; text-align: center; min-height: 380px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        button { padding: 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.2s; }
+        button { padding: 15px; font-size: 15px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.2s; }
         button:active { transform: scale(0.95); }
         .btn-who { background-color: #7d6fb3; }
         .btn-what { background-color: #5d4a99; }
@@ -20,26 +20,25 @@
         .btn-why { background-color: #2a1f4d; }
         .btn-which { background-color: #1a1233; }
         .question-box { display: none; }
-        
-        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .sc-help { background: #ff9800; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border: none; }
-        
-        .question-text { font-size: 20px; margin: 15px 0; font-weight: 600; color: #2a1f4d; line-height: 1.4; }
-        
-        .sc-box { display: none; background: #fff3e0; border: 1px dashed #ff9800; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #e65100; }
-        .answer-text { display: none; margin-top: 15px; padding: 15px; background-color: #e8f5e9; border-left: 5px solid #4caf50; font-style: italic; color: #2e7d32; text-align: left; font-size: 15px; }
-        
-        .btn-reveal { background-color: #4caf50; width: 100%; margin-top: 10px; }
-        .btn-back { background-color: #888; width: 100%; margin-top: 15px; }
+        .question-text { font-size: 19px; margin: 25px 0; font-weight: 600; color: #2a1f4d; line-height: 1.4; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-reveal { background-color: #4caf50; font-size: 12px; }
+        .btn-challenge { background-color: #ff9800; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+        .info-icon { background: rgba(255,255,255,0.3); border-radius: 50%; width: 24px; height: 24px; margin-left: 8px; font-size: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid white; cursor: help; }
+        .answer-text { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; font-style: italic; text-align: left; animation: fadeIn 0.4s; line-height: 1.5; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-back { background-color: #888; width: 100%; margin-top: 20px; }
         .footer { margin-top: 30px; text-align: center; color: #666; font-size: 12px; }
-        .logo-maia { height: 35px; margin-top: 5px; opacity: 0.8; }
+        .logo-maia { height: 32px; margin-top: 5px; opacity: 0.8; }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <img src="logo-school.png" alt="School Logo" class="logo-school">
+        <img src="logo-school.png" alt="School" class="logo-school">
         <img src="logo-rp.png" alt="Retrieving Path" class="logo-game">
     </div>
+
     <div class="container">
         <div id="menu" class="menu-grid">
             <button class="btn-who" onclick="showQuestion('who')">WHO</button>
@@ -51,19 +50,21 @@
         </div>
 
         <div id="question-display" class="question-box">
-            <div class="q-header">
-                <p id="cat-label" style="color: #888; font-size: 12px; text-transform: uppercase; margin: 0;"></p>
-                <button class="sc-help" onclick="toggleSC()" title="Show Success Criteria">?</button>
-            </div>
-            
-            <div id="sc-content" class="sc-box"></div>
+            <p id="cat-label" style="color: #888; font-size: 11px; text-transform: uppercase; margin: 0; font-weight: bold;"></p>
             <div id="question-content" class="question-text"></div>
             
-            <button class="btn-reveal" onclick="revealAnswer()">Reveal Truth</button>
+            <div id="buttons-area" class="action-grid">
+                <button class="btn-reveal" onclick="reveal('normal')">REVEAL TRUTH</button>
+                <button id="challenge-btn" class="btn-challenge" onclick="reveal('challenge')">
+                    CHALLENGE <span id="hint-icon" class="info-icon" title="">?</span>
+                </button>
+            </div>
+
             <div id="answer-content" class="answer-text"></div>
-            <button class="btn-back" onclick="goBack()">Back to Categories</button>
+            <button class="btn-back" onclick="goBack()">BACK</button>
         </div>
     </div>
+
     <div class="footer">
         <div>Designed and offered by:</div>
         <img src="logo-maia.png" alt="Maia Studio" class="logo-maia">
@@ -72,18 +73,102 @@
     <script>
         const questions = {
             who: [
-                {q:"Who was the first character to experience 'irrational fear'?", sc:"Mention the name of the father and use 'spotted'.", a:"Mr. Hope was the first one."},
-                {q:"Who stayed 'gloomy' and hid under the duvet?", sc:"List all characters except Small.", a:"The older members of the family (Mr. Hope, Mrs. Hope, Adeline, and Maurice)."},
-                {q:"Who was the only one not affected by the morbid atmosphere?", sc:"Focus on the youngest member.", a:"Small, the youngest child."}
+                { q: "Who was the first person to spot the Black Dog?", a: "Mr. Hope was the first person to spot the dog.", sc: "Challenge: Use 'spotted' and mention the time of day.", ac: "Evidence: Mr. Hope spotted the dog early in the morning when he looked out the window." },
+                { q: "Who described the dog's nose as big as a fridge?", a: "Mrs. Hope described the dog's nose as being as big as a fridge.", sc: "", ac: "" },
+                { q: "Who was the only character not affected by irrational fear?", a: "Small was the only one who did not feel irrational fear.", sc: "Challenge: Use the word 'courage' or 'brave'.", ac: "Evidence: Small showed great courage and was brave enough to go outside." },
+                { q: "Who hid under the duvet in the bedroom?", a: "Mr. Hope and Mrs. Hope hid under the duvet.", sc: "", ac: "" },
+                { q: "Who followed Small through the playground?", a: "The Black Dog followed Small through the playground.", sc: "", ac: "" }
             ],
             what: [
-                {q:"What did the family do that showed they had a 'morbid' imagination?", sc:"Compare the dog to an extinct animal.", a:"They imagined the dog was the size of a T-Rex or an Elephant."},
-                {q:"What did Small do to make the dog shrink?", sc:"Explain the action and her lack of fear.", a:"She showed no fear and played a game of chase with it."}
+                { q: "What did the family think the dog looked like at first?", a: "The family thought the dog was a giant, terrifying monster.", sc: "Challenge: Use 'morbid' or 'irrational' to describe their imagination.", ac: "Evidence: The family had a morbid imagination and an irrational fear of the dog." },
+                { q: "What did Small play with the dog outside?", a: "Small played a game of chase with the Black Dog.", sc: "", ac: "" },
+                { q: "What did Mr. Hope do after spotting the dog?", a: "Mr. Hope called the police to report a giant animal.", sc: "", ac: "" },
+                { q: "What happened to the dog's size when Small ignored the fear?", a: "The dog began to shrink as Small ignored the family's fear.", sc: "Challenge: Use the verb 'shrunk' and mention the cat flap.", ac: "Evidence: The dog shrunk until it was small enough to fit through the cat flap." },
+                { q: "What was the weather like on that morning?", a: "The weather was very cold and it was snowing.", sc: "", ac: "" }
             ],
             where: [
-                {q:"Where did the family hide because of their 'irrational' fear?", sc:"List 2 specific places inside the house.", a:"Under the covers, under the table, and behind the curtains."},
-                {q:"Where did the dog grow to its most 'gloomy' and giant size?", sc:"Mention the location relative to the house.", a:"Outside the house, in the family's mind/perception."}
+                { q: "Where did Mr. Hope first see the dog?", a: "Mr. Hope saw the dog outside the window in the snow.", sc: "Challenge: Use the word 'dawn' to specify the time.", ac: "Evidence: He spotted the dog outside the window at the break of dawn." },
+                { q: "Where did Maurice hide from the dog?", a: "Maurice hid behind the curtains.", sc: "", ac: "" },
+                { q: "Where did Adeline hide?", a: "Adeline hid under the table.", sc: "", ac: "" },
+                { q: "Where did the chase end?", a: "The chase ended when they reached the cat flap at the house.", sc: "", ac: "" },
+                { q: "Where did the family feel safe together?", a: "The family felt safe inside the kitchen with the door locked.", sc: "", ac: "" }
+            ],
+            when: [
+                { q: "When did the dog appear?", a: "The dog appeared early in the morning during a snowy dawn.", sc: "Challenge: Describe the setting using 'gloomy' or 'dawn'.", ac: "Evidence: The dog appeared during a gloomy and snowy dawn." },
+                { q: "When did the dog finally shrink?", a: "The dog shrunk after Small showed she was not afraid during the chase.", sc: "", ac: "" },
+                { q: "When did the family stop hiding?", a: "The family stopped hiding only when they saw the dog was small.", sc: "", ac: "" },
+                { q: "When did the story end?", a: "The story ended after the family sat by the fire with the dog.", sc: "Challenge: Use 'overcame' and describe the ending moment.", ac: "Evidence: The story ended when the family overcame their fear and sat by the fire." },
+                { q: "When did Mrs. Hope see the dog?", a: "Mrs. Hope saw the dog after her husband called her to the window.", sc: "", ac: "" }
             ],
             why: [
-                {q:"Why is the family's fear described as 'irrational'?", sc:"Explain that the size was only in their minds.", a:"Because the dog wasn't actually a monster; their fear made it look big."},
-                {q:"Why did Small go outside when everyone else was scared?",
+                { q: "Why did the dog grow so big?", a: "The dog grew big because the family was terrified of it.", sc: "Challenge: Use the term 'irrational fear' in your answer.", ac: "Evidence: The dog's size was a result of the family's irrational fear." },
+                { q: "Why did Small go outside?", a: "Small went outside because she was not afraid of the dog.", sc: "", ac: "" },
+                { q: "Why did the family hide?", a: "They hid because they believed the dog was a giant monster.", sc: "Challenge: Use 'exaggerated' to explain their reaction.", ac: "Evidence: They hid because they exaggerated the danger due to fear." },
+                { q: "Why did the dog sit by the fire at the end?", a: "The dog sat by the fire because it was now part of the family.", sc: "", ac: "" },
+                { q: "Why did the story happen in the snow?", a: "The snow helped create a gloomy and mysterious atmosphere.", sc: "", ac: "" }
+            ],
+            which: [
+                { q: "Which character showed the most courage?", a: "Small showed the most courage in the story.", sc: "Challenge: Use evidence of her actions to explain why.", ac: "Evidence: Small was the bravest because she faced the dog while others hid." },
+                { q: "Which word best describes the family's fear?", a: "The family's fear can be described as irrational.", sc: "", ac: "" },
+                { q: "Which animal was the dog compared to by Mr. Hope?", a: "Mr. Hope compared the dog to a tiger.", sc: "", ac: "" },
+                { q: "Which animal was the dog compared to by Mrs. Hope?", a: "Mrs. Hope compared the dog to an elephant.", sc: "", ac: "" },
+                { q: "Which part of the house did the dog enter?", a: "The dog entered the house through the cat flap.", sc: "", ac: "" }
+            ]
+        };
+
+        let currentQ = null;
+        let lastQuestionText = ""; 
+
+        function showQuestion(cat) {
+            const list = questions[cat];
+            let nextQ;
+            do {
+                nextQ = list[Math.floor(Math.random() * list.length)];
+            } while (nextQ.q === lastQuestionText && list.length > 1);
+
+            currentQ = nextQ;
+            lastQuestionText = currentQ.q; 
+            
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('question-display').style.display = 'block';
+            document.getElementById('cat-label').innerText = cat;
+            document.getElementById('question-content').innerText = currentQ.q;
+            document.getElementById('answer-content').style.display = 'none';
+            
+            const cBtn = document.getElementById('challenge-btn');
+            const hIcon = document.getElementById('hint-icon');
+            const btnGrid = document.getElementById('buttons-area');
+
+            if (currentQ.sc && currentQ.sc !== "") {
+                cBtn.style.display = 'flex';
+                hIcon.title = currentQ.sc;
+                btnGrid.style.gridTemplateColumns = '1fr 1fr';
+            } else {
+                cBtn.style.display = 'none';
+                btnGrid.style.gridTemplateColumns = '1fr';
+            }
+        }
+
+        function reveal(type) {
+            const box = document.getElementById('answer-content');
+            box.style.display = 'block';
+            if (type === 'challenge') {
+                box.innerHTML = "<strong>Challenge Evidence:</strong><br>" + currentQ.ac;
+                box.style.backgroundColor = "#fff3e0";
+                box.style.borderLeft = "5px solid #ff9800";
+                box.style.color = "#e65100";
+            } else {
+                box.innerHTML = "<strong>Standard Truth:</strong><br>" + currentQ.a;
+                box.style.backgroundColor = "#e8f5e9";
+                box.style.borderLeft = "5px solid #4caf50";
+                box.style.color = "#2e7d32";
+            }
+        }
+
+        function goBack() {
+            document.getElementById('menu').style.display = 'grid';
+            document.getElementById('question-display').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
