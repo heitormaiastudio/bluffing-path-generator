@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bluffing Path | Generator</title>
+
+<style>
+    :root {
+        --primary: #1b2040;
+        --accent: #2e60b2; 
+        --bg-page: #fcfcfc; 
+        --card: #ffffff;
+        --text-main: #333333;
+        --text-muted: #666666;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-page);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        color: var(--text-main);
+    }
+
+    .header-logo {
+        max-width: 280px;
+        height: auto;
+        margin-bottom: 30px;
+    }
+
+    .container {
+        background: var(--card);
+        padding: 40px;
+        border-radius: 28px;
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(27, 32, 64, 0.08); 
+        margin-bottom: 30px;
+        border: 1px solid #f0f0f0;
+    }
+
+    h2 { margin-bottom: 8px; color: var(--primary); font-size: 22px; font-weight: 700; }
+    p { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; margin-top: 0; }
+
+    input#code {
+        width: 85%;
+        padding: 14px;
+        border: 2px solid #eee;
+        border-radius: 14px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 16px;
+        outline: none;
+        color: var(--primary);
+    }
+
+    .wh-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 25px 0;
+    }
+
+    .btn-wh {
+        background: #f4f6f9;
+        color: var(--primary);
+        border: none;
+        padding: 15px 2px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+
+    .btn-wh:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .display-area {
+        background: #fdfdfd;
+        padding: 30px;
+        border-radius: 20px;
+        margin-top: 10px;
+        min-height: 120px;
+        border: 1px solid #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #question-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111;
+        line-height: 1.5;
+    }
+
+    .btn-help {
+        background: white;
+        border: 1px solid #ddd;
+        color: #777;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 20px;
+        display: none; 
+        text-transform: uppercase;
+        transition: all 0.2s;
+    }
+
+    .btn-help:hover { 
+        border-color: var(--accent); 
+        color: var(--accent); 
+    }
+
+    #answers-area {
+        margin-top: 18px;
+        text-align: left;
+        font-size: 13px;
+        background: #f9fbff;
+        padding: 18px;
+        border-radius: 14px;
+        color: #444;
+        width: 90%;
+        border: 1px solid #e8f0fe;
+    }
+
+    .hidden { display: none !important; }
+
+    .footer-container {
+        text-align: center;
+        margin-top: 10px;
+        width: 100%;
+        max-width: 420px;
+    }
+
+    .developed-by {
+        display: block;
+        font-weight: 600;
+        color: #bbb;
+        text-transform: uppercase;
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+
+    .footer-logo {
+        max-width: 140px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        opacity: 0.8;
+    }
+
+    #login-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 14px 50px;
+        border-radius: 14px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<img src="logobppas.png" alt="Bluffing Path Logo" class="header-logo">
+
+<div class="container" id="login">
+    <h2>Access Code</h2>
+    <p>Please enter your teacher code</p>
+    <input type="password" id="code" placeholder="••••••••">
+    <br>
+    <button id="login-btn" onclick="checkCode()">Enter Game</button>
+</div>
+
+<div class="container hidden" id="app">
+    <h2>Question Generator</h2>
+    <p>Select a category to play:</p>
+    
+    <div class="wh-grid">
+        <button class="btn-wh" onclick="generateByTag('WHAT')">What</button>
+        <button class="btn-wh" onclick="generateByTag('WHERE')">Where</button>
+        <button class="btn-wh" onclick="generateByTag('WHEN')">When</button>
+        <button class="btn-wh" onclick="generateByTag('WHO')">Who</button>
+        <button class="btn-wh" onclick="generateByTag('WHY')">Why</button>
+        <button class="btn-wh" onclick="generateByTag('HOW')">How</button>
+        <button class="btn-wh" style="grid-column: span 3; background: #e8f0fe;" onclick="generateByTag('WHICH')">Which</button>
+    </div>
+
+    <div class="display-area">
+        <div id="question-text">Choose a category...</div>
+        <button id="help-btn" class="btn-help" onclick="toggleHelp()">Need Help? 💡</button>
+        <div id="answers-area" class="hidden"></div>
+    </div>
+</div>
+
+<div class="footer-container">
+    <span class="developed-by">Developed by:</span>
+    <img src="logo-maia.png" alt="Maia Studio" class="footer-logo">
+</div>
+
+<script>
+const accessCode = "BLUFF2026";
+let currentAnswers = [];
+
+const questions = {
+    "WHAT": [
+        {q: "What did I watch on TV or Netflix last night?", a: ["I watched a movie.", "I watched a series.", "I watched a documentary."]},
+        {q: "What did I do as soon as I got home from school yesterday?", a: ["I studied.", "I ate something.", "I relaxed."]},
+        {q: "What did my parents give me for my last birthday?", a: ["My parents gave me a toy.", "My parents gave me a smartphone.", "My parents gave me clothes."]},
+        {q: "What did I draw in my notebook during a boring class?", a: ["I drew a heart.", "I drew a face.", "I drew random shapes."]},
+        {q: "What did my sibling or friend do to bother me last time?", a: ["My sibling or friend used my things.", "My sibling or friend made a mess.", "My sibling or friend told my secrets."]},
+        {q: "What did my mom or dad do to bother me last time?", a: ["My mom or dad shouted at me.", "My mom or dad complained.", "My mom or dad gave me a lecture."]}
+    ],
+    "WHERE": [
+        {q: "Where did I celebrate my last birthday?", a: ["I celebrated at home.", "I celebrated at a party.", "I celebrated at a playground."]},
+        {q: "Where did I imagine my dream house would be when I was younger?", a: ["I imagined it at the beach.", "I imagined it in a big city.", "I imagined it in another country."]},
+        {q: "Where did I go that I don't want to go back to?", a: ["I went to a place I didn't like.", "I went to a boring place.", "I went to somewhere far away."]},
+        {q: "Where did my family travel last summer?", a: ["My family traveled to another city.", "My family traveled to another state.", "My family traveled to another country."]},
+        {q: "Where did I go the last time I went out for dinner?", a: ["I went to a pizzeria.", "I went to a restaurant.", "I went to a fast-food place."]},
+        {q: "Where did I meet my friends the last time we saw each other?", a: ["I met my friends at school.", "I met my friends at the mall.", "I met my friends at the playground."]}
+    ],
+    "WHEN": [
+        {q: "When did I learn to ride a bike?", a: ["I learned when I was five.", "I learned when I was six.", "I never learned."]},
+        {q: "When did I last feel proud of myself at school?", a: ["I felt proud when I got a good grade.", "I felt proud when I won something.", "I felt proud when I helped someone."]},
+        {q: "When did I last argue with my brother or sister?", a: ["I argued yesterday.", "I argued last week.", "I surged last month."]},
+        {q: "When did I last go to a party?", a: ["I went to a party last weekend.", "I went to a party last month.", "I went to a party last year."]},
+        {q: "When did I last travel by plane or bus?", a: ["I traveled during the holidays.", "I traveled last summer.", "I traveled last year."]},
+        {q: "When did I meet my best friend for the first time?", a: ["I met my best friend at school.", "I met my best friend at a party.", "I met my best friend through another friend."]}
+    ],
+    "WHO": [
+        {q: "Who did I listen to when I needed advice?", a: ["I listened to my best friend.", "I listened to my parents.", "I listened to my teacher."]},
+        {q: "Who did I watch a movie with recently?", a: ["I watched a movie with my brother.", "I watched a movie with my mom.", "I watched a movie with my friend."]},
+        {q: "Who did I message last night?", a: ["I messaged my teacher.", "I messaged my dad.", "I messaged my sister."]},
+        {q: "Who did I travel with on my last holiday?", a: ["I traveled with my family.", "I traveled with my friends.", "I traveled with my cousins."]},
+        {q: "Who did I admire as a child?", a: ["I admired my dad.", "I admired an actor.", "I admired a character from a movie."]},
+        {q: "Who did I argue with last time?", a: ["I argued with my mom.", "I argued with my friend.", "I pocketed an argument with my brother."]}
+    ],
+    "WHY": [
+        {q: "Why did I stop talking to a specific friend?", a: ["I stopped talking to them because they lied.", "I stopped talking to them because we argued.", "I stopped talking to them because they changed."]},
+        {q: "Why did my dad or mom get mad at me last time?", a: ["My dad or mom got mad because of my grades.", "My dad or mom got mad because I lied.", "My dad or mom got mad because I didn't help."]},
+        {q: "Why did I arrive late to school once?", a: ["I arrived late because I overslept.", "I arrived late because of traffic.", "I arrived late because I was distracted."]},
+        {q: "Why did I cry the last time I cried?", a: ["I cried because I got hurt.", "I cried because I was sad.", "I cried because someone shouted at me."]},
+        {q: "Why did I argue with my friend last month?", a: ["I argued because they lied.", "I argued because they didn't invite me.", "I argued because they annoyed me."]},
+        {q: "Why did I feel bored in class yesterday?", a: ["I felt bored because the class was boring.", "I felt bored because it was too easy.", "I felt bored because it was too long."]}
+    ],
+    "HOW": [
+        {q: "How did I get to school this morning?", a: ["I got to school by car.", "I got to school walking.", "I got to school by bus."]},
+        {q: "How did I feel about speaking in front of the class?", a: ["I felt shy.", "I felt confident.", "I felt nervous."]},
+        {q: "How did I celebrate my last birthday?", a: ["I celebrated my birthday with friends.", "I celebrated with my family.", "I celebrated at home."]},
+        {q: "How did I help my parents at home last weekend?", a: ["I helped my parents by cleaning.", "I helped my parents by doing the dishes.", "I helped my parents by walking the dog."]},
+        {q: "How did I react when I watched a horror movie?", a: ["I reacted by getting scared.", "I reacted by laughing.", "I reacted by turning it off."]},
+        {q: "How did I start my day yesterday?", a: ["I started my day by taking a shower.", "I started my day by having breakfast.", "I started my day by checking my phone."]}
+    ],
+    "WHICH": [
+        {q: "Which book did I read last?", a: ["The book I read last was Harry Potter.", "The book I read last was Divergent.", "The book I read last was Captain Underpants."]},
+        {q: "Which movie did I see at the cinema last time?", a: ["The movie I saw at the cinema was a comedy.", "The movie I saw at the cinema was an action movie.", "The movie I saw at the cinema was a drama."]},
+        {q: "Which gift did I like the most on my birthday?", a: ["The gift I liked the most was a toy.", "The gift I liked the most was a book.", "The gift I liked the most was a shirt."]},
+        {q: "Which friend did I visit last week?", a: ["The friend I visited was a school friend.", "The friend I visited was a neighbor.", "The friend I visited was a cousin."]},
+        {q: "Which sport did I practice as a child?", a: ["The sport I practiced was judo.", "The sport I practiced was football.", "The sport I practiced was basketball."]},
+        {q: "Which app did I use the most yesterday?", a: ["The app I used the most was TikTok.", "The app I used the most was Instagram.", "The app I used the most was Snapchat."]}
+    ]
+};
+
+function checkCode(){
+    if(document.getElementById("code").value === accessCode){
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("app").classList.remove("hidden");
+    } else {
+        alert("Invalid code");
+    }
+}
+
+function generateByTag(tag) {
+    const list = questions[tag];
+    const selected = list[Math.floor(Math.random() * list.length)];
+    displayQuestion(selected);
+}
+
+function displayQuestion(item) {
+    document.getElementById("question-text").innerText = item.q;
+    currentAnswers = item.a;
+    
+    const area = document.getElementById("answers-area");
+    area.classList.add("hidden");
+    area.innerHTML = "";
+    
+    const btn = document.getElementById("help-btn");
+    btn.style.display = "inline-block"; 
+    btn.innerText = "Need Help? 💡";
+}
+
+function toggleHelp() {
+    const area = document.getElementById("answers-area");
+    const btn = document.getElementById("help-btn");
+    
+    if(area.classList.contains("hidden")) {
+        area.innerHTML = "<strong>Answer Options:</strong><br>• " + currentAnswers.join("<br>• ");
+        area.classList.remove("hidden");
+        btn.innerText = "Hide Options";
+    } else {
+        area.classList.add("hidden");
+        btn.innerText = "Need Help? 💡";
+    }
+}
+</script>
+
+</body>
+</html>
