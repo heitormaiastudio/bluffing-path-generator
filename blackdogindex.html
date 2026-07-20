@@ -22,28 +22,32 @@
         .question-box { display: none; }
         .question-text { font-size: 19px; margin: 25px 0; font-weight: 600; color: #2a1f4d; line-height: 1.4; min-height: 80px; display: flex; align-items: center; justify-content: center; }
         
-        /* Ajuste do Grid para acomodar o botão de ajuda separado */
         .action-area { margin-top: 20px; }
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .action-grid { display: flex; flex-direction: column; gap: 10px; }
         
-        .btn-reveal { background-color: #4caf50; font-size: 12px; }
-        .challenge-container { display: flex; gap: 5px; }
-        .btn-challenge { background-color: #ff9800; font-size: 12px; flex-grow: 1; }
+        .btn-reveal { background-color: #4caf50; font-size: 14px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         
-        /* Botão de Interrogação Independente */
-        .info-btn { 
+        /* Container flexível para alinhar o botão de desafio e a interrogação de dica */
+        .challenge-row { display: flex; gap: 8px; width: 100%; }
+        .btn-challenge { background-color: #ff9800; font-size: 14px; display: flex; flex-direction: column; align-items: center; flex-grow: 1; border-radius: 8px; }
+        .btn-reveal small, .btn-challenge small { font-size: 11px; font-weight: normal; margin-top: 4px; opacity: 0.9; }
+
+        /* Estilo do Botão de Dica (?) */
+        .btn-hint { 
             background-color: #ffd54f; 
-            color: #827717;
-            border-radius: 8px; 
-            width: 45px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            color: #827717; 
+            border: 2px solid #fbc02d; 
             font-size: 20px; 
-            font-weight: bold;
-            cursor: help;
-            border: 2px solid #fbc02d;
+            font-weight: bold; 
+            width: 50px; 
+            border-radius: 8px; 
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
         }
+        .btn-hint:active { transform: scale(0.95); }
 
         .answer-text { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; font-style: italic; text-align: left; animation: fadeIn 0.4s; line-height: 1.5; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -73,14 +77,21 @@
             <p id="cat-label" style="color: #888; font-size: 11px; text-transform: uppercase; margin: 0; font-weight: bold;"></p>
             <div id="question-content" class="question-text"></div>
             
-            <div class="action-area">
+            <div class="action-area" id="action-area">
                 <div id="buttons-area" class="action-grid">
-                    <button class="btn-reveal" onclick="reveal('normal')">REVEAL TRUTH</button>
                     
-                    <div id="challenge-wrapper" class="challenge-container">
-                        <button id="challenge-btn" class="btn-challenge" onclick="reveal('challenge')">CHALLENGE</button>
-                        <div id="hint-icon" class="info-btn" title="" onclick="showMobileHint()">?</div>
+                    <button class="btn-reveal" onclick="reveal('acceptable')">
+                        ACCEPTABLE TRUTH <small>(Move what you rolled)</small>
+                    </button>
+                    
+                    <!-- Linha do desafio com o Scaffold Gramatical (?) integrado ao lado -->
+                    <div class="challenge-row">
+                        <button class="btn-challenge" onclick="reveal('standard')">
+                            STANDARD TRUTH <small>(Move what you rolled + 1 Bonus!)</small>
+                        </button>
+                        <button class="btn-hint" onclick="showScaffold()" title="Get grammar clues">?</button>
                     </div>
+
                 </div>
             </div>
 
@@ -95,48 +106,49 @@
     </div>
 
     <script>
+        // Mantive seu banco de dados estruturado e limpo
         const questions = {
             who: [
-                { q: "Who was the first person to spot the Black Dog?", a: "Mr. Hope was the first person to spot the dog.", sc: "Challenge: Use 'spotted' and mention the time of day.", ac: "Evidence: Mr. Hope spotted the dog early in the morning when he looked out the window." },
-                { q: "Who described the dog's nose as big as a fridge?", a: "Mrs. Hope described the dog's nose as being as big as a fridge.", sc: "", ac: "" },
-                { q: "Who was the only character not affected by irrational fear?", a: "Small was the only one who did not feel irrational fear.", sc: "Challenge: Use the word 'courage' or 'brave'.", ac: "Evidence: Small showed great courage and was brave enough to go outside." },
-                { q: "Who hid under the duvet in the bedroom?", a: "Mr. Hope and Mrs. Hope hid under the duvet.", sc: "", ac: "" },
-                { q: "Who followed Small through the playground?", a: "The Black Dog followed Small through the playground.", sc: "", ac: "" }
+                { q: "Who was the first person to spot the Black Dog?", acceptable: "Mr. Hope spotted the dog first.", standard: "Early in the morning, Mr. Hope was the first person to spot the terrifying creature.", hints: "Early in the morning / terrifying" },
+                { q: "Who described the dog's nose as big as a fridge?", acceptable: "Mrs. Hope described it like that.", standard: "Gasping in shock, Mrs. Hope described the beast's nose as being as big as a fridge.", hints: "Gasping in shock / beast's" },
+                { q: "Who was the only character not affected by irrational fear?", acceptable: "Small was the only one who was not afraid.", standard: "Unlike her terrified family, Small was the only character who did not feel irrational fear.", hints: "Unlike her terrified family / irrational" },
+                { q: "Who hid under the duvet in the bedroom?", acceptable: "Mr. Hope and Mrs. Hope hid under the duvet.", standard: "Underneath the heavy duvet, Mr. and Mrs. Hope hid with absolute terror.", hints: "Underneath the heavy duvet / absolute terror" },
+                { q: "Who followed Small through the playground?", acceptable: "The Black Dog followed her.", standard: "As they ran through the playground, the colossal Black Dog followed Small.", hints: "As they ran through / colossal" }
             ],
             what: [
-                { q: "What did the family think the dog looked like at first?", a: "The family thought the dog was a giant, terrifying monster.", sc: "Challenge: Use 'morbid' or 'irrational' to describe their imagination.", ac: "Evidence: The family had a morbid imagination and an irrational fear of the dog." },
-                { q: "What did Small play with the dog outside?", a: "Small played a game of chase with the Black Dog.", sc: "", ac: "" },
-                { q: "What did Mr. Hope do after spotting the dog?", a: "Mr. Hope called the police to report a giant animal.", sc: "", ac: "" },
-                { q: "What happened to the dog's size when Small ignored the fear?", a: "The dog began to shrink as Small ignored the family's fear.", sc: "Challenge: Use the verb 'shrunk' and mention the cat flap.", ac: "Evidence: The dog shrunk until it was small enough to fit through the cat flap." },
-                { q: "What was the weather like on that morning?", a: "The weather was very cold and it was snowing.", sc: "", ac: "" }
+                { q: "What did the family think the dog looked like at first?", acceptable: "They thought it was a giant monster.", standard: "Due to their morbid imagination, the family thought the dog was a giant, terrifying monster.", hints: "Due to / morbid / terrifying" },
+                { q: "What did Small play with the dog outside?", acceptable: "She played a game of chase.", standard: "Without any hesitation, Small played an energetic game of chase with the beast.", hints: "Without any hesitation / energetic / beast" },
+                { q: "What did Mr. Hope do after spotting the dog?", acceptable: "He called the police.", standard: "Trembling with fear, Mr. Hope called the police to report a giant animal.", hints: "Trembling with fear / report" },
+                { q: "What happened to the dog's size when Small ignored the fear?", acceptable: "The dog began to shrink.", standard: "Since Small completely ignored the family's fear, the dog began to shrink with every step.", hints: "Since / completely ignored / shrink" },
+                { q: "What was the weather like on that morning?", acceptable: "It was cold and snowing.", standard: "On that particular morning, the weather was freezing cold and covered in thick snow.", hints: "On that particular morning / freezing / thick snow" }
             ],
             where: [
-                { q: "Where did Mr. Hope first see the dog?", a: "Mr. Hope saw the dog outside the window in the snow.", sc: "Challenge: Use the word 'dawn' to specify the time.", ac: "Evidence: He spotted the dog outside the window at the break of dawn." },
-                { q: "Where did Maurice hide from the dog?", a: "Maurice hid behind the curtains.", sc: "", ac: "" },
-                { q: "Where did Adeline hide?", a: "Adeline hid under the table.", sc: "", ac: "" },
-                { q: "Where did the chase end?", a: "The chase ended when they reached the cat flap at the house.", sc: "", ac: "" },
-                { q: "Where did the family feel safe together?", a: "The family felt safe inside the kitchen with the door locked.", sc: "", ac: "" }
+                { q: "Where did Mr. Hope first see the dog?", acceptable: "He saw it outside the window.", standard: "Outside the frosted window, Mr. Hope saw the colossal dog in the snow.", hints: "Outside the frosted window / colossal" },
+                { q: "Where did Maurice hide from the dog?", acceptable: "Maurice hid behind the curtains.", standard: "Behind the heavy living room curtains, Maurice cowered in complete terror.", hints: "Behind the heavy... / cowered in complete terror" },
+                { q: "Where did Adeline hide?", acceptable: "Adeline hid under the table.", standard: "Underneath the wooden kitchen table, Adeline tried to make herself invisible.", hints: "Underneath the wooden... / invisible" },
+                { q: "Where did the chase end?", acceptable: "It ended at the cat flap.", standard: "Eventually, the exhausting chase ended right in front of the tiny cat flap.", hints: "Eventually / exhausting / tiny cat flap" },
+                { q: "Where did the family feel safe together?", acceptable: "They felt safe inside the kitchen.", standard: "Inside the warm kitchen, the family finally felt safe and secure together.", hints: "Inside the warm kitchen / safe and secure" }
             ],
             when: [
-                { q: "When did the dog appear?", a: "The dog appeared early in the morning during a snowy dawn.", sc: "Challenge: Describe the setting using 'gloomy' or 'dawn'.", ac: "Evidence: The dog appeared during a gloomy and snowy dawn." },
-                { q: "When did the dog finally shrink?", a: "The dog shrunk after Small showed she was not afraid during the chase.", sc: "", ac: "" },
-                { q: "When did the family stop hiding?", a: "The family stopped hiding only when they saw the dog was small.", sc: "", ac: "" },
-                { q: "When did the story end?", a: "The story ended after the family sat by the fire with the dog.", sc: "Challenge: Use 'overcame' and describe the ending moment.", ac: "Evidence: The story ended when the family overcame their fear and sat by the fire." },
-                { q: "When did Mrs. Hope see the dog?", a: "Mrs. Hope saw the dog after her husband called her to the window.", sc: "", ac: "" }
+                { q: "When did the dog appear?", acceptable: "It appeared early in the morning.", standard: "During a gloomy and snowy dawn, the enormous Black Dog mysteriously appeared.", hints: "During a gloomy and snowy dawn / mysteriously" },
+                { q: "When did the dog finally shrink?", acceptable: "It shrunk after Small showed she wasn't afraid.", standard: "The dog finally shrunk into a puppy when Small confidently proved she was not afraid.", hints: "confidently proved" },
+                { q: "When did the family stop hiding?", acceptable: "They stopped hiding when the dog was small.", standard: "The family only stopped hiding when they realized the creature was now a tiny, harmless puppy.", hints: "realized / tiny, harmless" },
+                { q: "When did the story end?", acceptable: "It ended when they sat by the fire.", standard: "After they overcame their irrational fear, the story ended with the family sitting cozy by the fire.", hints: "After they overcame... / cozy" },
+                { q: "When did Mrs. Hope see the dog?", acceptable: "She saw it after her husband called her.", standard: "Immediately after Mr. Hope shouted for her, Mrs. Hope rushed to the window and saw the beast.", hints: "Immediately after... / rushed / beast" }
             ],
             why: [
-                { q: "Why did the dog grow so big?", a: "The dog grew big because the family was terrified of it.", sc: "Challenge: Use the term 'irrational fear' in your answer.", ac: "Evidence: The dog's size was a result of the family's irrational fear." },
-                { q: "Why did Small go outside?", a: "Small went outside because she was not afraid of the dog.", sc: "", ac: "" },
-                { q: "Why did the family hide?", a: "They hid because they believed the dog was a giant monster.", sc: "Challenge: Use 'exaggerated' to explain their reaction.", ac: "Evidence: They hid because they exaggerated the danger due to fear." },
-                { q: "Why did the dog sit by the fire at the end?", a: "The dog sat by the fire because it was now part of the family.", sc: "", ac: "" },
-                { q: "Why did the story happen in the snow?", a: "The snow helped create a gloomy and mysterious atmosphere.", sc: "", ac: "" }
+                { q: "Why did the dog grow so big?", acceptable: "It grew big because the family was terrified.", standard: "The dog grew to a colossal size because the family's irrational fear fed the beast.", hints: "colossal size / irrational fear / fed the beast" },
+                { q: "Why did Small go outside?", acceptable: "She went outside because she wasn't scared.", standard: "Since she possessed incredible courage, Small went outside to face the creature.", hints: "Since she possessed... / face the creature" },
+                { q: "Why did the family hide?", acceptable: "They hid because they thought it was a monster.", standard: "They desperately hid because their exaggerated imagination made them believe the dog was a monster.", hints: "desperately / exaggerated imagination" },
+                { q: "Why did the dog sit by the fire at the end?", acceptable: "Because it was now part of the family.", standard: "Because it was finally accepted, the tiny dog sat happily by the warm fire.", hints: "Because it was finally accepted / happily" },
+                { q: "Why did the story happen in the snow?", acceptable: "To make it look mysterious.", standard: "The snow was used by the author to create a gloomy and isolated atmosphere.", hints: "to create a gloomy and isolated atmosphere" }
             ],
             which: [
-                { q: "Which character showed the most courage?", a: "Small showed the most courage in the story.", sc: "Challenge: Use evidence of her actions to explain why.", ac: "Evidence: Small was the bravest because she faced the dog while others hid." },
-                { q: "Which word best describes the family's fear?", a: "The family's fear can be described as irrational.", sc: "", ac: "" },
-                { q: "Which animal was the dog compared to by Mr. Hope?", a: "Mr. Hope compared the dog to a tiger.", sc: "", ac: "" },
-                { q: "Which animal was the dog compared to by Mrs. Hope?", a: "Mrs. Hope compared the dog to an elephant.", sc: "", ac: "" },
-                { q: "Which part of the house did the dog enter?", a: "The dog entered the house through the cat flap.", sc: "", ac: "" }
+                { q: "Which character showed the most courage?", acceptable: "Small showed the most courage.", standard: "Without a doubt, Small was the character who demonstrated the most courage.", hints: "Without a doubt / demonstrated" },
+                { q: "Which word best describes the family's fear?", acceptable: "Their fear was irrational.", standard: "The family's uncontrollable fear can best be described as completely irrational.", hints: "uncontrollable / completely irrational" },
+                { q: "Which animal was the dog compared to by Mr. Hope?", acceptable: "He compared it to a tiger.", standard: "In sheer panic, Mr. Hope compared the massive dog to a wild tiger.", hints: "In sheer panic / massive / wild" },
+                { q: "Which animal was the dog compared to by Mrs. Hope?", acceptable: "She compared it to an elephant.", standard: "Overwhelmed by dread, Mrs. Hope compared the creature to a giant elephant.", hints: "Overwhelmed by dread / giant" },
+                { q: "Which part of the house did the dog enter?", acceptable: "It entered through the cat flap.", standard: "Once it was tiny enough, the dog confidently entered the house through the small cat flap.", hints: "Once it was tiny enough / confidently" }
             ]
         };
 
@@ -157,38 +169,29 @@
             document.getElementById('question-display').style.display = 'block';
             document.getElementById('cat-label').innerText = cat;
             document.getElementById('question-content').innerText = currentQ.q;
-            document.getElementById('answer-content').style.display = 'none';
             
-            const challengeWrapper = document.getElementById('challenge-wrapper');
-            const hIcon = document.getElementById('hint-icon');
-            const btnGrid = document.getElementById('buttons-area');
-
-            if (currentQ.sc && currentQ.sc !== "") {
-                challengeWrapper.style.display = 'flex';
-                hIcon.title = currentQ.sc; 
-                btnGrid.style.gridTemplateColumns = '1fr 1fr';
-            } else {
-                challengeWrapper.style.display = 'none';
-                btnGrid.style.gridTemplateColumns = '1fr';
-            }
+            document.getElementById('answer-content').style.display = 'none';
+            document.getElementById('action-area').style.display = 'block';
         }
 
-        function showMobileHint() {
-            if (currentQ.sc) {
-                alert(currentQ.sc);
+        function showScaffold() {
+            if (currentQ && currentQ.hints) {
+                alert("💡 CHALLENGE CLUES:\nTo get the bonus point, try to use these fragments in your sentence:\n\n👉 " + currentQ.hints);
             }
         }
 
         function reveal(type) {
             const box = document.getElementById('answer-content');
+            document.getElementById('action-area').style.display = 'none';
             box.style.display = 'block';
-            if (type === 'challenge') {
-                box.innerHTML = "<strong>Challenge Evidence:</strong><br>" + currentQ.ac;
+            
+            if (type === 'standard') {
+                box.innerHTML = "<strong>Standard Truth Challenge:</strong><br><br>" + currentQ.standard;
                 box.style.backgroundColor = "#fff3e0";
                 box.style.borderLeft = "5px solid #ff9800";
                 box.style.color = "#e65100";
             } else {
-                box.innerHTML = "<strong>Standard Truth:</strong><br>" + currentQ.a;
+                box.innerHTML = "<strong>Acceptable Truth:</strong><br><br>" + currentQ.acceptable;
                 box.style.backgroundColor = "#e8f5e9";
                 box.style.borderLeft = "5px solid #4caf50";
                 box.style.color = "#2e7d32";
